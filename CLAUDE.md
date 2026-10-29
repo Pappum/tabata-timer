@@ -11,7 +11,6 @@ Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `m
 - `fonts/`: embedded fonts (Google Fonts latin subset, OFL) — `figtree.woff2` (text, variable 300–900) and `bebas-neue.woff2` (all digits).
 - `sw.js`: service worker, cache-first for all app files.
 - `manifest.json`, `icon-180.png`, `icon-512.png`: PWA install.
-- `DESIGN_BRIEF.md`, `assets_brief/`: design brief and references.
 
 No external dependencies, no build step, no framework.
 
