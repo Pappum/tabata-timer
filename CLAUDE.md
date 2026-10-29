@@ -30,8 +30,9 @@ No external dependencies, no build step, no framework.
 ## Cache versioning (`sw.js`)
 - Any change to app files requires changing `C` in `sw.js`, otherwise the installed app keeps serving the old version.
 - Any new app file must be added to the `A` list in `sw.js`, otherwise it won't be available offline.
-- During dev: `tabata-vNbX` (bump `X` on each change).
-- Release: plain `tabata-vN`.
+- Versions use three numbers: `2.0.0`, `2.1.0`, `2.1.1`…
+- During dev: `tabata-vX.Y.ZbN` (e.g. `tabata-v2.1.0b1`, bump `N` on each change).
+- Release: plain `tabata-vX.Y.Z` (e.g. `tabata-v2.1.0`), matching the branch `release/vX.Y.Z`, the Git tag `X.Y.Z` and the GitHub release named `X.Y.Z` (tag and release without `v`).
 - `apple-mobile-web-app-status-bar-style` changes only apply after removing and re-adding the app to the home screen.
 
 ## Run locally
