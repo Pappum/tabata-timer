@@ -3,173 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#F3F5F4">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Tabata">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Tabata</title>
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-html,body{height:100%;margin:0}
-body{font-family:-apple-system,system-ui,sans-serif;background:#111;color:#fff;
-  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  transition:background .2s}
-body.prep{background:#b36b00}
-body.work{background:#0a7d3b}
-body.rest{background:#1a4fa0}
-body.done{background:#5b2a9e}
-.view{display:none;height:100%;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:20px}
-.view.on{display:flex}
-h1{margin:0 0 8px;font-size:28px}
-.row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:340px;
-  background:#222;border-radius:14px;padding:10px 12px}
-.row span.l{font-size:17px}
-.row .c{display:flex;align-items:center;gap:14px}
-.row b{min-width:48px;text-align:center;font-size:24px;font-variant-numeric:tabular-nums}
-button{font:inherit;color:inherit;border:0;border-radius:12px;background:#333;cursor:pointer}
-.row button{width:44px;height:44px;font-size:24px}
-.big{width:100%;max-width:340px;padding:18px;font-size:22px;font-weight:600;background:#0a7d3b}
-.sec{width:100%;max-width:340px;padding:16px;font-size:18px;background:rgba(0,0,0,.3)}
-#label{font-size:30px;letter-spacing:.1em;text-transform:uppercase}
-#time{font-size:min(42vw,200px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-#round{font-size:22px;opacity:.85}
-</style>
+<link rel="preload" href="fonts/figtree.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/bebas-neue.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="setup" class="view on">
-  <h1>Tabata</h1>
-  <div class="row"><span class="l">Préparation</span><span class="c"><button data-k="prep" data-d="-5">−</button><b id="v-prep"></b><button data-k="prep" data-d="5">+</button></span></div>
-  <div class="row"><span class="l">Effort</span><span class="c"><button data-k="work" data-d="-5">−</button><b id="v-work"></b><button data-k="work" data-d="5">+</button></span></div>
-  <div class="row"><span class="l">Repos</span><span class="c"><button data-k="rest" data-d="-5">−</button><b id="v-rest"></b><button data-k="rest" data-d="5">+</button></span></div>
-  <div class="row"><span class="l">Rounds</span><span class="c"><button data-k="rounds" data-d="-1">−</button><b id="v-rounds"></b><button data-k="rounds" data-d="1">+</button></span></div>
-  <button class="big" id="go">Démarrer</button>
+  <div class="total"><span>Durée de la séance</span><b id="total"></b></div>
+
+  <div class="card prep wide">
+    <div class="cv"><span class="l">Préparation</span><span class="val"><input id="v-prep-m" data-k="prep" inputmode="numeric" maxlength="2" aria-label="Préparation, minutes"><i>:</i><input id="v-prep-s" data-k="prep" inputmode="numeric" maxlength="2" aria-label="Préparation, secondes"></span></div>
+    <div class="st"><button data-k="prep" data-d="-5" aria-label="Diminuer la préparation">−</button><button data-k="prep" data-d="5" aria-label="Augmenter la préparation">+</button></div>
+  </div>
+
+  <div class="block">
+    <div class="pair">
+      <div class="card work">
+        <span class="l">Effort</span>
+        <span class="val"><input id="v-work-m" data-k="work" inputmode="numeric" maxlength="2" aria-label="Effort, minutes"><i>:</i><input id="v-work-s" data-k="work" inputmode="numeric" maxlength="2" aria-label="Effort, secondes"></span>
+        <div class="st"><button data-k="work" data-d="-5" aria-label="Diminuer l'effort">−</button><button data-k="work" data-d="5" aria-label="Augmenter l'effort">+</button></div>
+      </div>
+      <div class="card rest">
+        <span class="l">Repos</span>
+        <span class="val"><input id="v-rest-m" data-k="rest" inputmode="numeric" maxlength="2" aria-label="Repos, minutes"><i>:</i><input id="v-rest-s" data-k="rest" inputmode="numeric" maxlength="2" aria-label="Repos, secondes"></span>
+        <div class="st"><button data-k="rest" data-d="-5" aria-label="Diminuer le repos">−</button><button data-k="rest" data-d="5" aria-label="Augmenter le repos">+</button></div>
+      </div>
+    </div>
+    <div class="sets">
+      <span class="l">Séries</span><input id="v-sets" class="num" data-k="sets" inputmode="numeric" maxlength="2" aria-label="Nombre de séries">
+      <div class="st"><button data-k="sets" data-d="-1" aria-label="Moins de séries">−</button><button data-k="sets" data-d="1" aria-label="Plus de séries">+</button></div>
+    </div>
+  </div>
+
+  <div class="pair">
+    <div class="card neutral">
+      <span class="l">Cycles</span>
+      <input id="v-cycles" class="val" data-k="cycles" inputmode="numeric" maxlength="2" aria-label="Nombre de cycles">
+      <div class="st"><button data-k="cycles" data-d="-1" aria-label="Moins de cycles">−</button><button data-k="cycles" data-d="1" aria-label="Plus de cycles">+</button></div>
+    </div>
+    <div class="card cyc">
+      <span class="l">Repos entre cycles</span>
+      <span class="val"><input id="v-cycleRest-m" data-k="cycleRest" inputmode="numeric" maxlength="2" aria-label="Repos entre cycles, minutes"><i>:</i><input id="v-cycleRest-s" data-k="cycleRest" inputmode="numeric" maxlength="2" aria-label="Repos entre cycles, secondes"></span>
+      <div class="st"><button data-k="cycleRest" data-d="-5" aria-label="Diminuer le repos entre cycles">−</button><button data-k="cycleRest" data-d="5" aria-label="Augmenter le repos entre cycles">+</button></div>
+    </div>
+  </div>
+
+  <button class="go" id="go">Démarrer</button>
 </div>
 
 <div id="timer" class="view">
-  <div id="label"></div>
-  <div id="time"></div>
-  <div id="round"></div>
-  <button class="sec" id="pause">Pause</button>
-  <button class="sec" id="stop">Arrêter</button>
+  <div class="prog">
+    <div class="pc"><span>Séries</span><div class="dots" id="d-sets"></div></div>
+    <div class="pc" id="pc-cycles"><span>Cycles</span><div class="dots" id="d-cycles"></div></div>
+  </div>
+  <div class="phase">
+    <span id="label"></span>
+    <div class="bar"><div id="bar"></div></div>
+    <span id="time"></span>
+    <span class="left"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/></svg><span id="left"></span></span>
+  </div>
+  <div class="next" id="next"><i id="next-dot"></i><span>Ensuite</span><b id="next-txt"></b></div>
+  <div class="ctrl">
+    <button class="stop" id="stop">Arrêter</button>
+    <button class="pause" id="pause" aria-label="Pause">
+      <svg id="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/></svg>
+      <svg id="ico-play" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M7 4.5v15l12.5-7.5z"/></svg>
+    </button>
+    <button class="skip" id="skip" aria-label="Passer à l'étape suivante"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l10 7-10 7z"/><path d="M19 5v14"/></svg></button>
+  </div>
 </div>
 
-<script>
-const $ = id => document.getElementById(id);
-const MIN = {prep:0, work:5, rest:0, rounds:1};
-const LABELS = {prep:'Préparation', work:'Effort', rest:'Repos'};
-let cfg = {prep:10, work:20, rest:10, rounds:8};
-try { Object.assign(cfg, JSON.parse(localStorage.getItem('tabata') || '{}')); } catch {}
+<div id="done" class="view">
+  <span class="done-l">Terminé</span>
+  <span class="done-t">✓</span>
+  <span id="done-sum"></span>
+  <button class="go" id="again">Recommencer</button>
+  <button class="stop" id="back">Réglages</button>
+</div>
 
-function renderCfg() { for (const k in cfg) $('v-' + k).textContent = cfg[k]; }
-renderCfg();
-
-document.querySelectorAll('.row button').forEach(b => b.onclick = () => {
-  const k = b.dataset.k;
-  cfg[k] = Math.max(MIN[k], cfg[k] + +b.dataset.d);
-  try { localStorage.setItem('tabata', JSON.stringify(cfg)); } catch {}
-  renderCfg();
-});
-
-let actx, phases, idx, end, left, paused, tick, lastSec, wake;
-
-function beep(freq, dur) {
-  const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
-  o.frequency.value = freq;
-  o.connect(g); g.connect(actx.destination);
-  g.gain.setValueAtTime(.3, t);
-  g.gain.exponentialRampToValueAtTime(.001, t + dur);
-  o.start(t); o.stop(t + dur);
-}
-
-async function lock() {
-  try { wake = await navigator.wakeLock.request('screen'); } catch {}
-}
-function unlock() {
-  try { wake && wake.release(); } catch {}
-  wake = null;
-}
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && tick) lock();
-});
-
-function view(id) {
-  $('setup').classList.toggle('on', id === 'setup');
-  $('timer').classList.toggle('on', id === 'timer');
-}
-
-function start() {
-  actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-  actx.resume();
-  phases = [];
-  if (cfg.prep > 0) phases.push({t:'prep', d:cfg.prep, r:0});
-  for (let r = 1; r <= cfg.rounds; r++) {
-    phases.push({t:'work', d:cfg.work, r});
-    if (r < cfg.rounds && cfg.rest > 0) phases.push({t:'rest', d:cfg.rest, r});
-  }
-  idx = -1; paused = false;
-  $('pause').textContent = 'Pause';
-  view('timer');
-  lock();
-  next();
-  tick = setInterval(loop, 100);
-}
-
-function next() {
-  idx++;
-  if (idx >= phases.length) return finish();
-  const p = phases[idx];
-  end = Date.now() + p.d * 1000;
-  lastSec = p.d;
-  document.body.className = p.t;
-  $('label').textContent = LABELS[p.t];
-  $('time').textContent = p.d;
-  $('round').textContent = p.r ? 'Round ' + p.r + ' / ' + cfg.rounds : ' ';
-  beep(p.t === 'work' ? 880 : p.t === 'rest' ? 440 : 660, .4);
-}
-
-function loop() {
-  if (paused) return;
-  const ms = end - Date.now();
-  if (ms <= 0) return next();
-  const s = Math.ceil(ms / 1000);
-  if (s !== lastSec) {
-    lastSec = s;
-    $('time').textContent = s;
-    if (s <= 3) beep(520, .12);
-  }
-}
-
-function finish() {
-  clearInterval(tick); tick = null;
-  unlock();
-  document.body.className = 'done';
-  $('label').textContent = 'Terminé';
-  $('time').textContent = '✓';
-  $('round').textContent = cfg.rounds + ' rounds';
-  $('pause').textContent = 'Recommencer';
-  paused = 'done';
-  [0, 200, 400].forEach(d => setTimeout(() => beep(880, .15), d));
-}
-
-function stop() {
-  clearInterval(tick); tick = null;
-  unlock();
-  document.body.className = '';
-  view('setup');
-}
-
-$('go').onclick = start;
-$('stop').onclick = stop;
-$('pause').onclick = () => {
-  if (paused === 'done') return start();
-  if (paused) { end = Date.now() + left; paused = false; $('pause').textContent = 'Pause'; }
-  else { left = end - Date.now(); paused = true; $('pause').textContent = 'Reprendre'; }
-};
-
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-</script>
+<script src="app.js"></script>
 </body>
 </html>
