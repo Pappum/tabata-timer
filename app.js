@@ -172,4 +172,13 @@ $('pause').onclick = () => {
   else { left = end - Date.now(); setPaused(true); }
 };
 
+document.addEventListener('dblclick', e => e.preventDefault());
+
+const showVer = v => {
+  if (/b\d+$/.test(v)) { $('ver').textContent = v.replace('tabata-', ''); $('ver').hidden = false; }
+};
+if (navigator.serviceWorker?.controller) {
+  navigator.serviceWorker.onmessage = e => showVer(e.data);
+  navigator.serviceWorker.controller.postMessage('version');
+} else fetch('sw.js').then(r => r.text()).then(t => showVer(t.match(/'(tabata-[^']+)'/)[1])).catch(() => {});
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
