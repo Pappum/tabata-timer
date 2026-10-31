@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.1 (2026-10-31)
+- Docs: changelog, version badge and release steps in CLAUDE.md.
+
 ## 2.1.0 (2026-10-31)
 - Fix timer screen height in iOS home-screen mode: controls and "Ensuite" now sit at the bottom of the screen.
 - Prevent double-tap zoom.
