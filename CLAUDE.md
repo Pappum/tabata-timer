@@ -26,12 +26,14 @@ No external dependencies, no build step, no framework.
 ## Design constraints
 - Digits must use a font with tabular figures, otherwise the time jumps every second. Check `tnum` before switching fonts.
 - iOS draws a blur under the status bar in home-screen mode (not removable from the page, `status-bar-style` has no effect): views keep extra top padding (`safe-area-inset-top + 36px`) so content stays out of it.
+- iOS home-screen mode launches the page in one of two states, varying between launches: either starting at the top of the screen (`safe-area-inset-top` = 47) or below the status bar (inset = 0). In both, `100%` / `100dvh` = screen height − 47. So `html` is `calc(100% + env(safe-area-inset-top))` with `overflow:hidden`; `100vh` (= full screen) overflows in the second state.
 
 ## Cache versioning (`sw.js`)
 - Any change to app files requires changing `C` in `sw.js`, otherwise the installed app keeps serving the old version.
 - Any new app file must be added to the `A` list in `sw.js`, otherwise it won't be available offline.
-- During dev: `tabata-vNbX` (bump `X` on each change).
-- Release: plain `tabata-vN`.
+- Versions use three numbers: `2.0.0`, `2.1.0`, `2.1.1`…
+- During dev: `tabata-vX.Y.ZbN` (e.g. `tabata-v2.1.0b1`, bump `N` on each change).
+- Release: plain `tabata-vX.Y.Z` (e.g. `tabata-v2.1.0`), matching the branch `release/vX.Y.Z`, the Git tag `X.Y.Z` and the GitHub release named `X.Y.Z` (tag and release without `v`).
 - `apple-mobile-web-app-status-bar-style` changes only apply after removing and re-adding the app to the home screen.
 
 ## Run locally

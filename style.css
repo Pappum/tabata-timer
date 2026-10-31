@@ -9,9 +9,10 @@
   --bg:var(--paper);--fg:var(--ink);
   --digits:'Bebas Neue',Figtree,sans-serif
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+*{box-sizing:border-box;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 [hidden]{display:none!important}
-html,body{height:100%;margin:0}
+html,body{height:100%;margin:0;overflow:hidden}
+html{height:calc(100% + env(safe-area-inset-top))}
 body{font-family:Figtree,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg);
   font-variant-numeric:tabular-nums;transition:background .2s}
 body.prep{--bg:var(--prep);--fg:var(--prep-fg)}
@@ -34,7 +35,7 @@ input{user-select:text;-webkit-user-select:text;outline:none}
 .total b{font-family:var(--digits);font-size:36px;font-weight:400;line-height:1}
 .card{display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:14px;border-radius:18px;min-height:150px}
 .card.wide{flex-direction:row;align-items:center;min-height:76px;padding:0 12px 0 16px;border-radius:20px;flex:none}
-.card .cv{display:flex;flex-direction:column;flex-grow:1}
+.card .cv{display:flex;align-items:center;gap:10px;flex-grow:1}
 .card.prep{background:var(--prep-soft);--val:var(--prep-val)}
 .card.work{background:var(--work-soft);--val:var(--work-val)}
 .card.rest{background:var(--rest-soft);--val:var(--rest-val)}
@@ -60,7 +61,7 @@ input.val{width:100%;text-align:left}
 
 /* Timer */
 #timer{align-items:center;gap:20px;
-  --t:min(calc((100vw - 32px) / 1.39),260px,calc((100dvh - 490px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) / .82))}
+  --t:min(calc((100vw - 32px) / 1.39),260px,calc((100dvh - 490px - env(safe-area-inset-bottom)) / .82))}
 .prog{display:flex;flex-direction:column;gap:10px;width:100%;max-width:420px}
 .pc{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding:0 18px;border-radius:18px;
   border:1.5px solid color-mix(in srgb,var(--fg) 18%,transparent);background:rgba(255,255,255,.14)}
@@ -94,3 +95,7 @@ input.val{width:100%;text-align:left}
 #done-sum{font-size:20px;color:var(--muted);margin-bottom:24px}
 #done .go{width:100%;max-width:340px;background:var(--work);color:var(--work-fg)}
 #done .stop{justify-self:auto}
+
+/* Version de cache */
+#ver{position:fixed;bottom:calc(env(safe-area-inset-bottom) - 14px);left:50%;transform:translateX(-50%);z-index:9;
+  padding:2px 8px;border-radius:99px;background:var(--ink);color:var(--paper);font-size:11px;opacity:.6;pointer-events:none}
