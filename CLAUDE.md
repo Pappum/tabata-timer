@@ -11,6 +11,7 @@ Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `m
 - `fonts/`: embedded fonts (Google Fonts latin subset, OFL) — `figtree.woff2` (text, variable 300–900) and `bebas-neue.woff2` (all digits).
 - `sw.js`: service worker, cache-first for all app files.
 - `manifest.json`, `icon-180.png`, `icon-512.png`: PWA install.
+- `changelog.md`: version history (not an app file, not cached).
 
 No external dependencies, no build step, no framework.
 
@@ -22,6 +23,7 @@ No external dependencies, no build step, no framework.
 - Session = prep once, then `cycles` × (`sets` × work, with rest between sets), with rest between cycles. A 0 s phase is skipped.
 - Timer screen: phase label, progress bar, time in `m:ss` (smaller font from 10:00), total time left, set/cycle dots (text `n / N` above 12; cycles row hidden when 1 cycle), "Ensuite" pill with the next phase, Arrêter / Pause / skip-to-next.
 - Phase colors (background): prep yellow, work green, rest red, rest between cycles light blue.
+- Version badge (`#ver`) always shown at the bottom of the screen: cache name from `sw.js` without `tabata-` (e.g. `v2.1.0`, `v2.1.0b3`).
 
 ## Design constraints
 - Digits must use a font with tabular figures, otherwise the time jumps every second. Check `tnum` before switching fonts.
@@ -34,6 +36,7 @@ No external dependencies, no build step, no framework.
 - Versions use three numbers: `2.0.0`, `2.1.0`, `2.1.1`…
 - During dev: `tabata-vX.Y.ZbN` (e.g. `tabata-v2.1.0b1`, bump `N` on each change).
 - Release: plain `tabata-vX.Y.Z` (e.g. `tabata-v2.1.0`), matching the branch `release/vX.Y.Z`, the Git tag `X.Y.Z` and the GitHub release named `X.Y.Z` (tag and release without `v`).
+- Release steps: date the version's section in `changelog.md`, set plain `C`, merge `release/vX.Y.Z` into `main` (`--no-ff`), tag `X.Y.Z` on the merge, push, then create the GitHub release `X.Y.Z` with the changelog section as notes.
 - `apple-mobile-web-app-status-bar-style` changes only apply after removing and re-adding the app to the home screen.
 
 ## Run locally
