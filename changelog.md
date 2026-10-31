@@ -1,10 +1,10 @@
 # Changelog
 
-## 2.1.0 (unreleased)
+## 2.1.0 (2026-10-31)
 - Fix timer screen height in iOS home-screen mode: controls and "Ensuite" now sit at the bottom of the screen.
 - Prevent double-tap zoom.
 - Settings: prep label and time on one row.
-- Dev cache version badge at the bottom of the screen (dev builds only).
+- App version badge at the bottom of the screen.
 
 ## 2.0.0 (2026-10-29)
 - Redesigned UI.
