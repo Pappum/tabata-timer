@@ -5,7 +5,7 @@ Tabata timer PWA, meant to be installed and used **offline on mobile** (iPhone, 
 Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `main`).
 
 ## Structure
-- `index.html`: markup — three views: `#setup`, `#timer`, `#done`.
+- `index.html`: markup — four views: `#home`, `#setup`, `#timer`, `#done`.
 - `style.css`: styles. Colors are CSS variables on `:root`; the phase sets the body class (`prep`, `work`, `rest`, `cycleRest`, `done`), which switches `--bg` / `--fg`.
 - `app.js`: app logic.
 - `fonts/`: embedded fonts (Google Fonts latin subset, OFL) — `figtree.woff2` (text, variable 300–900) and `bebas-neue.woff2` (all digits).
@@ -16,6 +16,8 @@ Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `m
 No external dependencies, no build step, no framework.
 
 ## Behavior
+- Home screen (shown at launch): title "Timers" and a "TABATA" tile opening the settings. Meant to host other timer types later; its settings button (`#settings`) is hidden for now.
+- Settings screen: back button (‹) next to Démarrer returns to the home screen. Arrêter (timer) and Réglages (end screen) return to the settings, not home.
 - Settings: prep, work, rest, sets, cycles, rest between cycles. Durations via −/+ (±5 s) or direct input (minutes and seconds fields); sets/cycles via −/+ or input.
 - Total session duration shown at the top of the settings screen.
 - Keys in `cfg` / `localStorage` (key `tabata`): `prep`, `work`, `rest`, `sets`, `cycles`, `cycleRest` — durations **in seconds**.

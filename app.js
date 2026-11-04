@@ -75,7 +75,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function view(id) {
-  for (const v of ['setup', 'timer', 'done']) $(v).classList.toggle('on', v === id);
+  for (const v of ['home', 'setup', 'timer', 'done']) $(v).classList.toggle('on', v === id);
 }
 
 function dots(el, n, on) {
@@ -163,6 +163,8 @@ function stop() {
   view('setup');
 }
 
+$('tabata').onclick = () => view('setup');
+$('home-back').onclick = () => view('home');
 $('go').onclick = start;
 $('again').onclick = start;
 $('stop').onclick = stop;
