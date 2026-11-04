@@ -29,6 +29,7 @@ No external dependencies, no build step, no framework.
 - Digits must use a font with tabular figures, otherwise the time jumps every second. Check `tnum` before switching fonts.
 - iOS draws a blur under the status bar in home-screen mode (not removable from the page, `status-bar-style` has no effect): views keep extra top padding (`safe-area-inset-top + 36px`) so content stays out of it.
 - iOS home-screen mode launches the page in one of two states, varying between launches: either starting at the top of the screen (`safe-area-inset-top` = 47) or below the status bar (inset = 0). In both, `100%` / `100dvh` = screen height − 47. So `html` is `calc(100% + env(safe-area-inset-top))` with `overflow:hidden`; `100vh` (= full screen) overflows in the second state.
+- Sound uses Web Audio. On iOS its default session (`ambient`) is muted by silent mode, and a context started while silent stays muted after silent mode is turned off. So `start()` sets `navigator.audioSession.type = 'playback'` before creating the `AudioContext`: sound always plays, silent mode or not.
 
 ## Cache versioning (`sw.js`)
 - Any change to app files requires changing `C` in `sw.js`, otherwise the installed app keeps serving the old version.

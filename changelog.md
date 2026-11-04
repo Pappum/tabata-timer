@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.0
+- Sound plays even when the iPhone is in silent mode.
+
 ## 2.1.1 (2026-10-31)
 - Docs: changelog, version badge and release steps in CLAUDE.md.
 

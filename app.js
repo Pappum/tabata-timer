@@ -92,6 +92,7 @@ function setPaused(p) {
 }
 
 function start() {
+  if (navigator.audioSession) navigator.audioSession.type = 'playback';
   actx = actx || new (window.AudioContext || window.webkitAudioContext)();
   actx.resume();
   phases = buildPhases();
