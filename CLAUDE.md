@@ -5,8 +5,8 @@ Tabata timer PWA, meant to be installed and used **offline on mobile** (iPhone, 
 Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `main`).
 
 ## Structure
-- `index.html`: markup — four views: `#home`, `#setup`, `#timer`, `#done`.
-- `style.css`: styles. Colors are CSS variables on `:root`; the phase sets the body class (`prep`, `work`, `rest`, `cycleRest`, `done`), which switches `--bg` / `--fg`.
+- `index.html`: markup — five views: `#home`, `#prefs`, `#setup`, `#timer`, `#done`.
+- `style.css`: styles. Colors are CSS variables on `:root`; the phase sets the body class (`prep`, `work`, `rest`, `cycleRest`, `done`), which switches `--bg` / `--fg`. Dark theme redefines the tokens twice (same values): under `@media (prefers-color-scheme:dark)` on `:root:not([data-theme=light])`, and on `:root[data-theme=dark]`. Phase backgrounds of the timer are the same in both themes.
 - `app.js`: app logic.
 - `fonts/`: embedded fonts (Google Fonts latin subset, OFL) — `figtree.woff2` (text, variable 300–900) and `bebas-neue.woff2` (all digits).
 - `sw.js`: service worker, cache-first for all app files.
@@ -16,11 +16,13 @@ Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `m
 No external dependencies, no build step, no framework.
 
 ## Behavior
-- Home screen (shown at launch): title "Timers" and a "TABATA" tile opening the settings. Meant to host other timer types later; its settings button (`#settings`) is hidden for now.
+- Home screen (shown at launch): title "Timers", a gear button (`#settings`) opening the preferences, and a "TABATA" tile opening the settings. Meant to host other timer types later.
+- Preferences screen (`#prefs`): global settings, back button (‹) returns to the home screen. Theme: Clair / Sombre / Auto (default, follows the system).
 - Settings screen: back button (‹) next to Démarrer returns to the home screen. Arrêter (timer) and Réglages (end screen) return to the settings, not home.
 - Settings: prep, work, rest, sets, cycles, rest between cycles. Durations via −/+ (±5 s) or direct input (minutes and seconds fields); sets/cycles via −/+ or input.
 - Total session duration shown at the top of the settings screen.
 - Keys in `cfg` / `localStorage` (key `tabata`): `prep`, `work`, `rest`, `sets`, `cycles`, `cycleRest` — durations **in seconds**.
+- Global preferences in `prefs` / `localStorage` (key `prefs`), saved with `setPref(k, v)`: `theme` (`light`, `dark`, `auto`). `applyTheme()` sets `data-theme` on `<html>` (no attribute in auto).
 - Bounds: work ≥ 5 s, other durations ≥ 0, max duration 99:59, sets and cycles 1–99.
 - Session = prep once, then `cycles` × (`sets` × work, with rest between sets), with rest between cycles. A 0 s phase is skipped.
 - Timer screen: phase label, progress bar, time in `m:ss` (smaller font from 10:00), total time left, set/cycle dots (text `n / N` above 12; cycles row hidden when 1 cycle), "Ensuite" pill with the next phase, Arrêter / Pause / skip-to-next.

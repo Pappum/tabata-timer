@@ -5,6 +5,13 @@ const LABELS = {prep:'Préparation', work:'Effort', rest:'Repos', cycleRest:'Rep
 const MAX_DOTS = 12;
 let cfg = {prep:10, work:20, rest:10, sets:8, cycles:1, cycleRest:60};
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('tabata') || '{}')); } catch {}
+let prefs = {theme:'auto'};
+try { Object.assign(prefs, JSON.parse(localStorage.getItem('prefs') || '{}')); } catch {}
+
+function setPref(k, v) {
+  prefs[k] = v;
+  try { localStorage.setItem('prefs', JSON.stringify(prefs)); } catch {}
+}
 
 const pad = n => String(n).padStart(2, '0');
 const fmt = s => Math.floor(s / 60) + ':' + pad(s % 60);
@@ -75,7 +82,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function view(id) {
-  for (const v of ['home', 'setup', 'timer', 'done']) $(v).classList.toggle('on', v === id);
+  for (const v of ['home', 'prefs', 'setup', 'timer', 'done']) $(v).classList.toggle('on', v === id);
 }
 
 function dots(el, n, on) {
@@ -163,6 +170,16 @@ function stop() {
   view('setup');
 }
 
+function applyTheme() {
+  const h = document.documentElement;
+  if (prefs.theme === 'auto') delete h.dataset.theme; else h.dataset.theme = prefs.theme;
+  document.querySelectorAll('#theme button').forEach(b => b.classList.toggle('on', b.dataset.v === prefs.theme));
+}
+applyTheme();
+document.querySelectorAll('#theme button').forEach(b => b.onclick = () => { setPref('theme', b.dataset.v); applyTheme(); });
+
+$('settings').onclick = () => view('prefs');
+$('prefs-back').onclick = () => view('home');
 $('tabata').onclick = () => view('setup');
 $('home-back').onclick = () => view('home');
 $('go').onclick = start;
