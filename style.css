@@ -59,6 +59,10 @@ input{user-select:text;-webkit-user-select:text;outline:none}
 .seg{display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--paper)}
 .seg button{height:36px;padding:0 12px;border-radius:9px;font-size:15px;font-weight:500;color:var(--muted)}
 .seg button.on{background:var(--ink);color:var(--paper)}
+.switch{position:relative;width:51px;height:31px;border-radius:16px;background:var(--muted);transition:background .2s}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch[aria-checked=true]{background:var(--work)}
+.switch[aria-checked=true]::after{transform:translateX(20px)}
 
 /* Réglages */
 #setup{gap:12px;overflow-y:auto}

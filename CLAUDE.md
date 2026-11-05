@@ -17,12 +17,12 @@ No external dependencies, no build step, no framework.
 
 ## Behavior
 - Home screen (shown at launch): title "Timers", a gear button (`#settings`) opening the preferences, and a "TABATA" tile opening the settings. Meant to host other timer types later.
-- Preferences screen (`#prefs`): global settings, back button (‹) returns to the home screen. Theme: Clair / Sombre / Auto (default, follows the system).
+- Preferences screen (`#prefs`): global settings, back button (‹) returns to the home screen. Theme: Clair / Sombre / Auto (default, follows the system). Son: switch turning all beeps on / off (on by default).
 - Settings screen: back button (‹) next to Démarrer returns to the home screen. Arrêter (timer) and Réglages (end screen) return to the settings, not home.
 - Settings: prep, work, rest, sets, cycles, rest between cycles. Durations via −/+ (±5 s) or direct input (minutes and seconds fields); sets/cycles via −/+ or input.
 - Total session duration shown at the top of the settings screen.
 - Keys in `cfg` / `localStorage` (key `tabata`): `prep`, `work`, `rest`, `sets`, `cycles`, `cycleRest` — durations **in seconds**.
-- Global preferences in `prefs` / `localStorage` (key `prefs`), saved with `setPref(k, v)`: `theme` (`light`, `dark`, `auto`). `applyTheme()` sets `data-theme` on `<html>` (no attribute in auto).
+- Global preferences in `prefs` / `localStorage` (key `prefs`), saved with `setPref(k, v)`: `theme` (`light`, `dark`, `auto`). `applyTheme()` sets `data-theme` on `<html>` (no attribute in auto). `sound` (`true` / `false`): `beep()` returns early when off; `applySound()` sets `aria-checked` on `#sound`.
 - Bounds: work ≥ 5 s, other durations ≥ 0, max duration 99:59, sets and cycles 1–99.
 - Session = prep once, then `cycles` × (`sets` × work, with rest between sets), with rest between cycles. A 0 s phase is skipped.
 - Timer screen: phase label, progress bar, time in `m:ss` (smaller font from 10:00), total time left, set/cycle dots (text `n / N` above 12; cycles row hidden when 1 cycle), "Ensuite" pill with the next phase, Arrêter / Pause / skip-to-next.
@@ -48,4 +48,4 @@ No external dependencies, no build step, no framework.
 ```sh
 python3 -m http.server
 ```
-then http://localhost:8000. On the iPhone (same Wi-Fi): `python3 -m http.server 8000 --bind 0.0.0.0`, then `http://<Mac IP>:8000` (Wi-Fi is `en1` on this Mac: `ipconfig getifaddr en1`). Over plain HTTP the service worker and wake lock are disabled.
+then http://localhost:8000. On the iPhone (same Wi-Fi): `python3 -m http.server 8000 --bind 0.0.0.0`, then `http://<Mac IP>:8000` (Mac IP: `ipconfig getifaddr $(networksetup -listallhardwareports | awk '/Wi-Fi/{getline; print $2}')`). Over plain HTTP the service worker and wake lock are disabled.

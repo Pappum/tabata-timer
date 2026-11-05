@@ -1,4 +1,4 @@
-const C = 'tabata-v2.2.0b7';
+const C = 'tabata-v2.2.0b8';
 const A = ['./', 'index.html', 'style.css', 'app.js', 'fonts/figtree.woff2', 'fonts/bebas-neue.woff2', 'manifest.json', 'icon-180.png', 'icon-512.png'];
 
 self.addEventListener('install', e =>

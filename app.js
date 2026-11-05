@@ -5,7 +5,7 @@ const LABELS = {prep:'Préparation', work:'Effort', rest:'Repos', cycleRest:'Rep
 const MAX_DOTS = 12;
 let cfg = {prep:10, work:20, rest:10, sets:8, cycles:1, cycleRest:60};
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('tabata') || '{}')); } catch {}
-let prefs = {theme:'auto'};
+let prefs = {theme:'auto', sound:true};
 try { Object.assign(prefs, JSON.parse(localStorage.getItem('prefs') || '{}')); } catch {}
 
 function setPref(k, v) {
@@ -62,6 +62,7 @@ document.querySelectorAll('#setup input').forEach(i => {
 let actx, phases, after, idx, end, left, paused, tick, lastSec, wake;
 
 function beep(freq, dur) {
+  if (!prefs.sound) return;
   const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
   o.frequency.value = freq;
   o.connect(g); g.connect(actx.destination);
@@ -177,6 +178,12 @@ function applyTheme() {
 }
 applyTheme();
 document.querySelectorAll('#theme button').forEach(b => b.onclick = () => { setPref('theme', b.dataset.v); applyTheme(); });
+
+function applySound() {
+  $('sound').setAttribute('aria-checked', prefs.sound);
+}
+applySound();
+$('sound').onclick = () => { setPref('sound', !prefs.sound); applySound(); };
 
 $('settings').onclick = () => view('prefs');
 $('prefs-back').onclick = () => view('home');
