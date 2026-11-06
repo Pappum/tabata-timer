@@ -15,81 +15,81 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="ver" hidden></div>
+<div id="version" hidden></div>
 
 <div id="home" class="view on">
   <div class="home-h">
     <h1>Timers</h1>
-    <button class="icon" id="settings" aria-label="Réglages"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button class="icon" id="settings-open" aria-label="Réglages"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </div>
   <button class="tile" id="tabata"><span>TABATA</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
 </div>
 
-<div id="prefs" class="view">
+<div id="settings" class="view">
   <div class="home-h"><h1>Réglages</h1></div>
   <div class="card neutral wide">
     <span class="l">Thème</span>
-    <div class="seg" id="theme"><button data-v="light">Clair</button><button data-v="dark">Sombre</button><button data-v="auto">Auto</button></div>
+    <div class="seg" id="theme"><button data-value="light">Clair</button><button data-value="dark">Sombre</button><button data-value="auto">Auto</button></div>
   </div>
   <div class="card neutral wide">
     <span class="l">Son</span>
     <button class="switch" id="sound" role="switch" aria-label="Son"></button>
   </div>
   <div class="foot">
-    <button class="icon" id="prefs-back" aria-label="Retour à l'accueil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="icon" id="settings-back" aria-label="Retour à l'accueil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
   </div>
 </div>
 
-<div id="setup" class="view">
+<div id="config" class="view">
   <div class="total"><span>Durée de la séance</span><b id="total"></b></div>
 
   <div class="card prep wide">
-    <div class="cv"><span class="l">Préparation</span><span class="val"><input id="v-prep-m" data-k="prep" inputmode="numeric" maxlength="2" aria-label="Préparation, minutes"><i>:</i><input id="v-prep-s" data-k="prep" inputmode="numeric" maxlength="2" aria-label="Préparation, secondes"></span></div>
-    <div class="st"><button data-k="prep" data-d="-5" aria-label="Diminuer la préparation">−</button><button data-k="prep" data-d="5" aria-label="Augmenter la préparation">+</button></div>
+    <div class="cv"><span class="l">Préparation</span><span class="val"><input id="value-prep-min" data-key="prep" inputmode="numeric" maxlength="2" aria-label="Préparation, minutes"><i>:</i><input id="value-prep-sec" data-key="prep" inputmode="numeric" maxlength="2" aria-label="Préparation, secondes"></span></div>
+    <div class="st"><button data-key="prep" data-step="-5" aria-label="Diminuer la préparation">−</button><button data-key="prep" data-step="5" aria-label="Augmenter la préparation">+</button></div>
   </div>
 
   <div class="block">
     <div class="pair">
       <div class="card work">
         <span class="l">Effort</span>
-        <span class="val"><input id="v-work-m" data-k="work" inputmode="numeric" maxlength="2" aria-label="Effort, minutes"><i>:</i><input id="v-work-s" data-k="work" inputmode="numeric" maxlength="2" aria-label="Effort, secondes"></span>
-        <div class="st"><button data-k="work" data-d="-5" aria-label="Diminuer l'effort">−</button><button data-k="work" data-d="5" aria-label="Augmenter l'effort">+</button></div>
+        <span class="val"><input id="value-work-min" data-key="work" inputmode="numeric" maxlength="2" aria-label="Effort, minutes"><i>:</i><input id="value-work-sec" data-key="work" inputmode="numeric" maxlength="2" aria-label="Effort, secondes"></span>
+        <div class="st"><button data-key="work" data-step="-5" aria-label="Diminuer l'effort">−</button><button data-key="work" data-step="5" aria-label="Augmenter l'effort">+</button></div>
       </div>
       <div class="card rest">
         <span class="l">Repos</span>
-        <span class="val"><input id="v-rest-m" data-k="rest" inputmode="numeric" maxlength="2" aria-label="Repos, minutes"><i>:</i><input id="v-rest-s" data-k="rest" inputmode="numeric" maxlength="2" aria-label="Repos, secondes"></span>
-        <div class="st"><button data-k="rest" data-d="-5" aria-label="Diminuer le repos">−</button><button data-k="rest" data-d="5" aria-label="Augmenter le repos">+</button></div>
+        <span class="val"><input id="value-rest-min" data-key="rest" inputmode="numeric" maxlength="2" aria-label="Repos, minutes"><i>:</i><input id="value-rest-sec" data-key="rest" inputmode="numeric" maxlength="2" aria-label="Repos, secondes"></span>
+        <div class="st"><button data-key="rest" data-step="-5" aria-label="Diminuer le repos">−</button><button data-key="rest" data-step="5" aria-label="Augmenter le repos">+</button></div>
       </div>
     </div>
     <div class="sets">
-      <span class="l">Séries</span><input id="v-sets" class="num" data-k="sets" inputmode="numeric" maxlength="2" aria-label="Nombre de séries">
-      <div class="st"><button data-k="sets" data-d="-1" aria-label="Moins de séries">−</button><button data-k="sets" data-d="1" aria-label="Plus de séries">+</button></div>
+      <span class="l">Séries</span><input id="value-sets" class="num" data-key="sets" inputmode="numeric" maxlength="2" aria-label="Nombre de séries">
+      <div class="st"><button data-key="sets" data-step="-1" aria-label="Moins de séries">−</button><button data-key="sets" data-step="1" aria-label="Plus de séries">+</button></div>
     </div>
   </div>
 
   <div class="pair">
     <div class="card neutral">
       <span class="l">Cycles</span>
-      <input id="v-cycles" class="val" data-k="cycles" inputmode="numeric" maxlength="2" aria-label="Nombre de cycles">
-      <div class="st"><button data-k="cycles" data-d="-1" aria-label="Moins de cycles">−</button><button data-k="cycles" data-d="1" aria-label="Plus de cycles">+</button></div>
+      <input id="value-cycles" class="val" data-key="cycles" inputmode="numeric" maxlength="2" aria-label="Nombre de cycles">
+      <div class="st"><button data-key="cycles" data-step="-1" aria-label="Moins de cycles">−</button><button data-key="cycles" data-step="1" aria-label="Plus de cycles">+</button></div>
     </div>
-    <div class="card cyc">
+    <div class="card cycleRest">
       <span class="l">Repos entre cycles</span>
-      <span class="val"><input id="v-cycleRest-m" data-k="cycleRest" inputmode="numeric" maxlength="2" aria-label="Repos entre cycles, minutes"><i>:</i><input id="v-cycleRest-s" data-k="cycleRest" inputmode="numeric" maxlength="2" aria-label="Repos entre cycles, secondes"></span>
-      <div class="st"><button data-k="cycleRest" data-d="-5" aria-label="Diminuer le repos entre cycles">−</button><button data-k="cycleRest" data-d="5" aria-label="Augmenter le repos entre cycles">+</button></div>
+      <span class="val"><input id="value-cycleRest-min" data-key="cycleRest" inputmode="numeric" maxlength="2" aria-label="Repos entre cycles, minutes"><i>:</i><input id="value-cycleRest-sec" data-key="cycleRest" inputmode="numeric" maxlength="2" aria-label="Repos entre cycles, secondes"></span>
+      <div class="st"><button data-key="cycleRest" data-step="-5" aria-label="Diminuer le repos entre cycles">−</button><button data-key="cycleRest" data-step="5" aria-label="Augmenter le repos entre cycles">+</button></div>
     </div>
   </div>
 
   <div class="foot">
-    <button class="icon" id="home-back" aria-label="Retour à l'accueil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="icon" id="config-back" aria-label="Retour à l'accueil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
     <button class="go" id="go">Démarrer</button>
   </div>
 </div>
 
 <div id="timer" class="view">
   <div class="prog">
-    <div class="pc"><span>Séries</span><div class="dots" id="d-sets"></div></div>
-    <div class="pc" id="pc-cycles"><span>Cycles</span><div class="dots" id="d-cycles"></div></div>
+    <div class="counter"><span>Séries</span><div class="dots" id="dots-sets"></div></div>
+    <div class="counter" id="counter-cycles"><span>Cycles</span><div class="dots" id="dots-cycles"></div></div>
   </div>
   <div class="phase">
     <span id="label"></span>
@@ -113,7 +113,7 @@
   <span class="done-t">✓</span>
   <span id="done-sum"></span>
   <button class="go" id="again">Recommencer</button>
-  <button class="stop" id="back">Réglages</button>
+  <button class="stop" id="home-open">Accueil</button>
 </div>
 
 <script src="app.js"></script>

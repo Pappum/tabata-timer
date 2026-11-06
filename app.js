@@ -3,207 +3,207 @@ const MIN = {prep:0, work:5, rest:0, sets:1, cycles:1, cycleRest:0};
 const MAX = {prep:5999, work:5999, rest:5999, sets:99, cycles:99, cycleRest:5999};
 const LABELS = {prep:'Préparation', work:'Effort', rest:'Repos', cycleRest:'Repos cycle'};
 const MAX_DOTS = 12;
-let cfg = {prep:10, work:20, rest:10, sets:8, cycles:1, cycleRest:60};
-try { Object.assign(cfg, JSON.parse(localStorage.getItem('tabata') || '{}')); } catch {}
-let prefs = {theme:'auto', sound:true};
-try { Object.assign(prefs, JSON.parse(localStorage.getItem('prefs') || '{}')); } catch {}
+let config = {prep:10, work:20, rest:10, sets:8, cycles:1, cycleRest:60};
+try { Object.assign(config, JSON.parse(localStorage.getItem('config') || '{}')); } catch {}
+let settings = {theme:'auto', sound:true};
+try { Object.assign(settings, JSON.parse(localStorage.getItem('settings') || '{}')); } catch {}
 
-function setPref(k, v) {
-  prefs[k] = v;
-  try { localStorage.setItem('prefs', JSON.stringify(prefs)); } catch {}
+function setSetting(key, value) {
+  settings[key] = value;
+  try { localStorage.setItem('settings', JSON.stringify(settings)); } catch {}
 }
 
-const pad = n => String(n).padStart(2, '0');
-const fmt = s => Math.floor(s / 60) + ':' + pad(s % 60);
+const padTwo = n => String(n).padStart(2, '0');
+const formatTime = seconds => Math.floor(seconds / 60) + ':' + padTwo(seconds % 60);
 
 function buildPhases() {
-  const ph = [];
-  if (cfg.prep > 0) ph.push({t:'prep', d:cfg.prep, r:0, c:0});
-  for (let c = 1; c <= cfg.cycles; c++) {
-    for (let r = 1; r <= cfg.sets; r++) {
-      ph.push({t:'work', d:cfg.work, r, c});
-      if (r < cfg.sets && cfg.rest > 0) ph.push({t:'rest', d:cfg.rest, r, c});
+  const phaseList = [];
+  if (config.prep > 0) phaseList.push({type:'prep', duration:config.prep, set:0, cycle:0});
+  for (let cycle = 1; cycle <= config.cycles; cycle++) {
+    for (let set = 1; set <= config.sets; set++) {
+      phaseList.push({type:'work', duration:config.work, set, cycle});
+      if (set < config.sets && config.rest > 0) phaseList.push({type:'rest', duration:config.rest, set, cycle});
     }
-    if (c < cfg.cycles && cfg.cycleRest > 0) ph.push({t:'cycleRest', d:cfg.cycleRest, r:cfg.sets, c});
+    if (cycle < config.cycles && config.cycleRest > 0) phaseList.push({type:'cycleRest', duration:config.cycleRest, set:config.sets, cycle});
   }
-  return ph;
+  return phaseList;
 }
 
-function renderCfg() {
+function renderConfig() {
   for (const k in LABELS) {
-    const m = $('v-' + k + '-m');
-    m.value = Math.floor(cfg[k] / 60);
-    m.style.width = m.value.length + 'ch';
-    $('v-' + k + '-s').value = pad(cfg[k] % 60);
+    const minutesInput = $('value-' + k + '-min');
+    minutesInput.value = Math.floor(config[k] / 60);
+    minutesInput.style.width = minutesInput.value.length + 'ch';
+    $('value-' + k + '-sec').value = padTwo(config[k] % 60);
   }
-  $('v-sets').value = cfg.sets;
-  $('v-cycles').value = cfg.cycles;
-  $('total').textContent = fmt(buildPhases().reduce((a, p) => a + p.d, 0));
+  $('value-sets').value = config.sets;
+  $('value-cycles').value = config.cycles;
+  $('total').textContent = formatTime(buildPhases().reduce((a, p) => a + p.duration, 0));
 }
-renderCfg();
+renderConfig();
 
-function set(k, v) {
-  cfg[k] = Math.min(MAX[k], Math.max(MIN[k], Math.round(v) || 0));
-  try { localStorage.setItem('tabata', JSON.stringify(cfg)); } catch {}
-  renderCfg();
+function setConfig(key, value) {
+  config[key] = Math.min(MAX[key], Math.max(MIN[key], Math.round(value) || 0));
+  try { localStorage.setItem('config', JSON.stringify(config)); } catch {}
+  renderConfig();
 }
 
-document.querySelectorAll('#setup button[data-k]').forEach(b => b.onclick = () => set(b.dataset.k, cfg[b.dataset.k] + +b.dataset.d));
+document.querySelectorAll('#config button[data-key]').forEach(b => b.onclick = () => setConfig(b.dataset.key, config[b.dataset.key] + +b.dataset.step));
 
-document.querySelectorAll('#setup input').forEach(i => {
+document.querySelectorAll('#config input').forEach(i => {
   i.onfocus = () => i.select();
   i.onchange = () => {
-    const k = i.dataset.k;
-    if (!LABELS[k]) return set(k, +i.value);
-    set(k, (+$('v-' + k + '-m').value || 0) * 60 + (+$('v-' + k + '-s').value || 0));
+    const k = i.dataset.key;
+    if (!LABELS[k]) return setConfig(k, +i.value);
+    setConfig(k, (+$('value-' + k + '-min').value || 0) * 60 + (+$('value-' + k + '-sec').value || 0));
   };
 });
 
-let actx, phases, after, idx, end, left, paused, tick, lastSec, wake;
+let audioContext, phases, remainingAfter, phaseIndex, phaseEnd, pausedRemaining, paused, tickInterval, lastSecond, wakeLock;
 
-function beep(freq, dur) {
-  if (!prefs.sound) return;
-  const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
-  o.frequency.value = freq;
-  o.connect(g); g.connect(actx.destination);
-  g.gain.setValueAtTime(.3, t);
-  g.gain.exponentialRampToValueAtTime(.001, t + dur);
-  o.start(t); o.stop(t + dur);
+function beep(frequency, duration) {
+  if (!settings.sound) return;
+  const oscillator = audioContext.createOscillator(), gain = audioContext.createGain(), now = audioContext.currentTime;
+  oscillator.frequency.value = frequency;
+  oscillator.connect(gain); gain.connect(audioContext.destination);
+  gain.gain.setValueAtTime(.3, now);
+  gain.gain.exponentialRampToValueAtTime(.001, now + duration);
+  oscillator.start(now); oscillator.stop(now + duration);
 }
 
 async function lock() {
-  try { wake = await navigator.wakeLock.request('screen'); } catch {}
+  try { wakeLock = await navigator.wakeLock.request('screen'); } catch {}
 }
 function unlock() {
-  try { wake && wake.release(); } catch {}
-  wake = null;
+  try { wakeLock && wakeLock.release(); } catch {}
+  wakeLock = null;
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && tick) lock();
+  if (document.visibilityState === 'visible' && tickInterval) lock();
 });
 
 function view(id) {
-  for (const v of ['home', 'prefs', 'setup', 'timer', 'done']) $(v).classList.toggle('on', v === id);
+  for (const v of ['home', 'settings', 'config', 'timer', 'done']) $(v).classList.toggle('on', v === id);
 }
 
-function dots(el, n, on) {
-  if (n > MAX_DOTS) { el.textContent = on + ' / ' + n; return; }
-  el.innerHTML = '<i></i>'.repeat(n);
-  [...el.children].forEach((d, i) => d.classList.toggle('on', i < on));
+function dots(element, count, filled) {
+  if (count > MAX_DOTS) { element.textContent = filled + ' / ' + count; return; }
+  element.innerHTML = '<i></i>'.repeat(count);
+  [...element.children].forEach((d, i) => d.classList.toggle('on', i < filled));
 }
 
-function setPaused(p) {
-  paused = p;
-  $('ico-pause').toggleAttribute('hidden', p);
-  $('ico-play').toggleAttribute('hidden', !p);
-  $('pause').setAttribute('aria-label', p ? 'Reprendre' : 'Pause');
+function setPaused(value) {
+  paused = value;
+  $('ico-pause').toggleAttribute('hidden', value);
+  $('ico-play').toggleAttribute('hidden', !value);
+  $('pause').setAttribute('aria-label', value ? 'Reprendre' : 'Pause');
 }
 
 function start() {
   if (navigator.audioSession) navigator.audioSession.type = 'playback';
-  actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-  actx.resume();
+  audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+  audioContext.resume();
   phases = buildPhases();
-  after = phases.map((_, i) => phases.slice(i + 1).reduce((a, p) => a + p.d, 0));
-  $('pc-cycles').hidden = cfg.cycles < 2;
-  idx = -1;
+  remainingAfter = phases.map((_, i) => phases.slice(i + 1).reduce((a, p) => a + p.duration, 0));
+  $('counter-cycles').hidden = config.cycles < 2;
+  phaseIndex = -1;
   setPaused(false);
   view('timer');
   lock();
   next();
-  clearInterval(tick);
-  tick = setInterval(loop, 100);
+  clearInterval(tickInterval);
+  tickInterval = setInterval(loop, 100);
 }
 
 function next() {
-  idx++;
-  if (idx >= phases.length) return finish();
-  const p = phases[idx], n = phases[idx + 1];
-  end = Date.now() + p.d * 1000;
-  if (paused) left = p.d * 1000;
-  lastSec = p.d;
-  document.body.className = p.t;
-  $('label').textContent = LABELS[p.t];
-  dots($('d-sets'), cfg.sets, p.r);
-  dots($('d-cycles'), cfg.cycles, p.c);
-  $('next').hidden = !n;
-  if (n) {
-    $('next-dot').style.background = 'var(--' + (n.t === 'cycleRest' ? 'cyc' : n.t) + ')';
-    $('next-txt').textContent = LABELS[n.t] + ' ' + fmt(n.d);
+  phaseIndex++;
+  if (phaseIndex >= phases.length) return finish();
+  const phase = phases[phaseIndex], nextPhase = phases[phaseIndex + 1];
+  phaseEnd = Date.now() + phase.duration * 1000;
+  if (paused) pausedRemaining = phase.duration * 1000;
+  lastSecond = phase.duration;
+  document.body.className = phase.type;
+  $('label').textContent = LABELS[phase.type];
+  dots($('dots-sets'), config.sets, phase.set);
+  dots($('dots-cycles'), config.cycles, phase.cycle);
+  $('next').hidden = !nextPhase;
+  if (nextPhase) {
+    $('next-dot').style.background = 'var(--' + nextPhase.type + ')';
+    $('next-txt').textContent = LABELS[nextPhase.type] + ' ' + formatTime(nextPhase.duration);
   }
-  draw(p.d * 1000);
-  beep(p.t === 'work' ? 880 : p.t === 'prep' ? 660 : 440, .4);
+  draw(phase.duration * 1000);
+  beep(phase.type === 'work' ? 880 : phase.type === 'prep' ? 660 : 440, .4);
 }
 
 function draw(ms) {
-  const p = phases[idx], s = Math.ceil(ms / 1000);
-  $('time').textContent = fmt(s);
-  $('time').classList.toggle('long', s >= 600);
-  $('left').textContent = fmt(Math.ceil((ms + after[idx] * 1000) / 1000));
-  $('bar').style.width = (100 - ms / (p.d * 10)) + '%';
+  const phase = phases[phaseIndex], seconds = Math.ceil(ms / 1000);
+  $('time').textContent = formatTime(seconds);
+  $('time').classList.toggle('long', seconds >= 600);
+  $('left').textContent = formatTime(Math.ceil((ms + remainingAfter[phaseIndex] * 1000) / 1000));
+  $('bar').style.width = (100 - ms / (phase.duration * 10)) + '%';
 }
 
 function loop() {
   if (paused) return;
-  const ms = end - Date.now();
+  const ms = phaseEnd - Date.now();
   if (ms <= 0) return next();
   draw(ms);
-  const s = Math.ceil(ms / 1000);
-  if (s !== lastSec) {
-    lastSec = s;
-    if (s <= 5) beep(520, .12);
+  const seconds = Math.ceil(ms / 1000);
+  if (seconds !== lastSecond) {
+    lastSecond = seconds;
+    if (seconds <= 5) beep(520, .12);
   }
 }
 
 function finish() {
-  clearInterval(tick); tick = null;
+  clearInterval(tickInterval); tickInterval = null;
   unlock();
   document.body.className = 'done';
-  $('done-sum').textContent = (cfg.cycles > 1 ? cfg.cycles + ' cycles × ' : '') + cfg.sets + ' séries';
+  $('done-sum').textContent = (config.cycles > 1 ? config.cycles + ' cycles × ' : '') + config.sets + ' séries';
   view('done');
-  [0, 200, 400].forEach(d => setTimeout(() => beep(880, .15), d));
+  [0, 200, 400].forEach(delay => setTimeout(() => beep(880, .15), delay));
 }
 
 function stop() {
-  clearInterval(tick); tick = null;
+  clearInterval(tickInterval); tickInterval = null;
   unlock();
   document.body.className = '';
-  view('setup');
+  view('config');
 }
 
 function applyTheme() {
-  const h = document.documentElement;
-  if (prefs.theme === 'auto') delete h.dataset.theme; else h.dataset.theme = prefs.theme;
-  document.querySelectorAll('#theme button').forEach(b => b.classList.toggle('on', b.dataset.v === prefs.theme));
+  const html = document.documentElement;
+  if (settings.theme === 'auto') delete html.dataset.theme; else html.dataset.theme = settings.theme;
+  document.querySelectorAll('#theme button').forEach(b => b.classList.toggle('on', b.dataset.value === settings.theme));
 }
 applyTheme();
-document.querySelectorAll('#theme button').forEach(b => b.onclick = () => { setPref('theme', b.dataset.v); applyTheme(); });
+document.querySelectorAll('#theme button').forEach(b => b.onclick = () => { setSetting('theme', b.dataset.value); applyTheme(); });
 
 function applySound() {
-  $('sound').setAttribute('aria-checked', prefs.sound);
+  $('sound').setAttribute('aria-checked', settings.sound);
 }
 applySound();
-$('sound').onclick = () => { setPref('sound', !prefs.sound); applySound(); };
+$('sound').onclick = () => { setSetting('sound', !settings.sound); applySound(); };
 
-$('settings').onclick = () => view('prefs');
-$('prefs-back').onclick = () => view('home');
-$('tabata').onclick = () => view('setup');
-$('home-back').onclick = () => view('home');
+$('settings-open').onclick = () => view('settings');
+$('settings-back').onclick = () => view('home');
+$('tabata').onclick = () => view('config');
+$('config-back').onclick = () => view('home');
 $('go').onclick = start;
 $('again').onclick = start;
 $('stop').onclick = stop;
-$('back').onclick = stop;
+$('home-open').onclick = () => { document.body.className = ''; view('home'); };
 $('skip').onclick = next;
 $('pause').onclick = () => {
-  if (paused) { end = Date.now() + left; setPaused(false); }
-  else { left = end - Date.now(); setPaused(true); }
+  if (paused) { phaseEnd = Date.now() + pausedRemaining; setPaused(false); }
+  else { pausedRemaining = phaseEnd - Date.now(); setPaused(true); }
 };
 
 document.addEventListener('dblclick', e => e.preventDefault());
 
-const showVer = v => { $('ver').textContent = v.replace('tabata-', ''); $('ver').hidden = false; };
+const showVersion = version => { $('version').textContent = version.replace('tabata-', ''); $('version').hidden = false; };
 if (navigator.serviceWorker?.controller) {
-  navigator.serviceWorker.onmessage = e => showVer(e.data);
+  navigator.serviceWorker.onmessage = e => showVersion(e.data);
   navigator.serviceWorker.controller.postMessage('version');
-} else fetch('sw.js').then(r => r.text()).then(t => showVer(t.match(/'(tabata-[^']+)'/)[1])).catch(() => {});
+} else fetch('sw.js').then(r => r.text()).then(t => showVersion(t.match(/'(tabata-[^']+)'/)[1])).catch(() => {});
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
