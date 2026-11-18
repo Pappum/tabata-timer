@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.0
+## 2.2.0 (2026-11-18)
 - Sound plays even when the iPhone is in silent mode.
 - Home screen with a Tabata button leading to the settings.
 - Settings: back button to the home screen, next to Démarrer.
