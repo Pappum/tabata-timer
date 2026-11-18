@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.0 (2026-11-18)
+- Sound plays even when the iPhone is in silent mode.
+- Home screen with a Tabata button leading to the settings.
+- Settings: back button to the home screen, next to Démarrer.
+- Preferences screen (gear on the home screen): light / dark / auto theme.
+- Preferences: sound on / off for the beeps.
+- End screen: Accueil button returns to the home screen.
+- Code: clearer names; saved settings reset to defaults.
+
 ## 2.1.1 (2026-10-31)
 - Docs: changelog, version badge and release steps in CLAUDE.md.
 
