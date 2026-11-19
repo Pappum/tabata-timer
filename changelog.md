@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.0
+- Fix beeps stopping after switching to another app and back.
+
 ## 2.2.0 (2026-11-18)
 - Sound plays even when the iPhone is in silent mode.
 - Home screen with a Tabata button leading to the settings.

@@ -79,8 +79,14 @@ function unlock() {
   wakeLock = null;
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && tickInterval) lock();
+  if (document.visibilityState !== 'visible' || !tickInterval) return;
+  lock();
+  // iOS can leave the context frozen after another app takes the audio (#15): replace it.
+  const context = audioContext, time = context.currentTime;
+  setTimeout(() => { if (context === audioContext && context.currentTime === time) newAudioContext(); }, 500);
 });
+// A context created outside a tap stays suspended on iOS until the next tap.
+$('unmute').onclick = () => audioContext.resume();
 
 function view(id) {
   for (const v of ['home', 'settings', 'config', 'timer', 'done']) $(v).classList.toggle('on', v === id);
@@ -99,10 +105,18 @@ function setPaused(value) {
   $('pause').setAttribute('aria-label', value ? 'Reprendre' : 'Pause');
 }
 
-function start() {
+function newAudioContext() {
+  if (audioContext) audioContext.close();
   if (navigator.audioSession) navigator.audioSession.type = 'playback';
-  audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-  audioContext.resume();
+  const context = audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const updateUnmute = () => { if (context === audioContext) $('unmute').hidden = !settings.sound || context.state === 'running'; };
+  context.onstatechange = updateUnmute;
+  context.resume();
+  updateUnmute();
+}
+
+function start() {
+  newAudioContext();
   phases = buildPhases();
   remainingAfter = phases.map((_, i) => phases.slice(i + 1).reduce((a, p) => a + p.duration, 0));
   $('counter-cycles').hidden = config.cycles < 2;

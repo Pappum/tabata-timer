@@ -25,7 +25,7 @@ No external dependencies, no build step, no framework.
 - Global settings in `settings` / `localStorage` (key `settings`), saved with `setSetting(key, value)`: `theme` (`light`, `dark`, `auto`). `applyTheme()` sets `data-theme` on `<html>` (no attribute in auto). `sound` (`true` / `false`): `beep()` returns early when off; `applySound()` sets `aria-checked` on `#sound`.
 - Bounds: work ≥ 5 s, other durations ≥ 0, max duration 99:59, sets and cycles 1–99.
 - Session = prep once, then `cycles` × (`sets` × work, with rest between sets), with rest between cycles. A 0 s phase is skipped.
-- Timer screen: phase label, progress bar, time in `m:ss` (smaller font from 10:00), total time left, set/cycle dots (text `n / N` above 12; cycles row hidden when 1 cycle), "Ensuite" pill with the next phase, Arrêter / Pause / skip-to-next.
+- Timer screen: phase label, progress bar, time in `m:ss` (smaller font from 10:00), total time left, set/cycle dots (text `n / N` above 12; cycles row hidden when 1 cycle), "Ensuite" pill with the next phase (with a mute button `#unmute` on its right, shown while the sound is off, see Design constraints), Arrêter / Pause / skip-to-next.
 - Phase colors (background): prep yellow, work green, rest red, rest between cycles light blue.
 - Version badge (`#version`) always shown at the bottom of the screen: cache name from `sw.js` without `tabata-` (e.g. `v2.1.0`, `v2.1.0b3`).
 
@@ -33,7 +33,8 @@ No external dependencies, no build step, no framework.
 - Digits must use a font with tabular figures, otherwise the time jumps every second. Check `tnum` before switching fonts.
 - iOS draws a blur under the status bar in home-screen mode (not removable from the page, `status-bar-style` has no effect): views keep extra top padding (`safe-area-inset-top + 36px`) so content stays out of it.
 - iOS home-screen mode launches the page in one of two states, varying between launches: either starting at the top of the screen (`safe-area-inset-top` = 47) or below the status bar (inset = 0). In both, `100%` / `100dvh` = screen height − 47. So `html` is `calc(100% + env(safe-area-inset-top))` with `overflow:hidden`; `100vh` (= full screen) overflows in the second state.
-- Sound uses Web Audio. On iOS its default session (`ambient`) is muted by silent mode, and a context started while silent stays muted after silent mode is turned off. So `start()` sets `navigator.audioSession.type = 'playback'` before creating the `AudioContext`: sound always plays, silent mode or not.
+- Sound uses Web Audio. On iOS its default session (`ambient`) is muted by silent mode, and a context started while silent stays muted after silent mode is turned off. So `newAudioContext()` sets `navigator.audioSession.type = 'playback'` before creating the `AudioContext`: sound always plays, silent mode or not.
+- On iOS, when another app takes the audio (e.g. a video in X), the `AudioContext` can stay frozen: `currentTime` stops, sometimes with state still `running`, and `resume()` does nothing. So `newAudioContext()` replaces it: in `start()`, and when the page becomes visible during a session if `currentTime` hasn't moved after 500 ms. A context created outside a tap stays `suspended` until the next tap, so `#unmute` is shown while its state isn't `running` (and sound is on); tapping it calls `resume()`.
 
 ## Cache versioning (`sw.js`)
 - Any change to app files requires changing `CACHE` in `sw.js`, otherwise the installed app keeps serving the old version.
