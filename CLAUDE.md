@@ -46,7 +46,8 @@ No external dependencies, no build step, no framework.
 - `apple-mobile-web-app-status-bar-style` changes only apply after removing and re-adding the app to the home screen.
 
 ## Git
-- A commit fixing a GitHub issue ends its message with `Fixes #N`, so the issue closes when the commit reaches `main`.
+- A commit fixing a GitHub issue ends its message with `Fixes #N` (links the commit; auto-closes only on `main`).
+- Close the issue as soon as its commit is on the release branch, with a comment naming the commit and version (e.g. `Fixed in abc1234 on release/v2.3.0, ships in 2.3.0.`). Closed = done in code; the milestone tells which release ships it.
 - A `changelog.md` entry tied to a GitHub issue ends with a link to it: `([#N](https://github.com/Pappum/tabata-timer/issues/N))`. A bare `#N` isn't linked in a repo `.md` file.
 
 ## Run locally
