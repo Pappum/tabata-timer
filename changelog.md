@@ -1,16 +1,16 @@
 # Changelog
 
 ## 2.3.0
-- Fix beeps stopping after switching to another app and back.
+- Fix beeps stopping after switching to another app and back ([#15](https://github.com/Pappum/tabata-timer/issues/15)).
 
 ## 2.2.0 (2026-11-18)
-- Sound plays even when the iPhone is in silent mode.
-- Home screen with a Tabata button leading to the settings.
+- Sound plays even when the iPhone is in silent mode ([#1](https://github.com/Pappum/tabata-timer/issues/1)).
+- Home screen with a Tabata button leading to the settings ([#2](https://github.com/Pappum/tabata-timer/issues/2)).
 - Settings: back button to the home screen, next to Démarrer.
-- Preferences screen (gear on the home screen): light / dark / auto theme.
-- Preferences: sound on / off for the beeps.
+- Preferences screen (gear on the home screen): light / dark / auto theme ([#3](https://github.com/Pappum/tabata-timer/issues/3)).
+- Preferences: sound on / off for the beeps ([#4](https://github.com/Pappum/tabata-timer/issues/4)).
 - End screen: Accueil button returns to the home screen.
-- Code: clearer names; saved settings reset to defaults.
+- Code: clearer names; saved settings reset to defaults ([#7](https://github.com/Pappum/tabata-timer/issues/7)).
 
 ## 2.1.1 (2026-10-31)
 - Docs: changelog, version badge and release steps in CLAUDE.md.

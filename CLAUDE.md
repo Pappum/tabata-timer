@@ -45,6 +45,10 @@ No external dependencies, no build step, no framework.
 - Release steps: date the version's section in `changelog.md`, set plain `CACHE`, merge `release/vX.Y.Z` into `main` (`--no-ff`), tag `X.Y.Z` on the merge, push, then create the GitHub release `X.Y.Z` with the changelog section as notes.
 - `apple-mobile-web-app-status-bar-style` changes only apply after removing and re-adding the app to the home screen.
 
+## Git
+- A commit fixing a GitHub issue ends its message with `Fixes #N`, so the issue closes when the commit reaches `main`.
+- A `changelog.md` entry tied to a GitHub issue ends with a link to it: `([#N](https://github.com/Pappum/tabata-timer/issues/N))`. A bare `#N` isn't linked in a repo `.md` file.
+
 ## Run locally
 ```sh
 python3 -m http.server
