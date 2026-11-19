@@ -6,7 +6,7 @@ Live: https://pappum.github.io/tabata-timer/ (GitHub Pages, serves the pushed `m
 
 ## Structure
 - `index.html`: markup — five views: `#home`, `#settings`, `#config`, `#timer`, `#done`.
-- `style.css`: styles. Colors are CSS variables on `:root`; the phase sets the body class (`prep`, `work`, `rest`, `cycleRest`, `done`), which switches `--bg` / `--fg`. Dark theme redefines the tokens twice (same values): under `@media (prefers-color-scheme:dark)` on `:root:not([data-theme=light])`, and on `:root[data-theme=dark]`. Phase backgrounds of the timer are the same in both themes.
+- `style.css`: styles. Colors are CSS variables on `:root`; the phase sets the body class (`prep`, `work`, `rest`, `cycleRest`, `cooldown`, `done`), which switches `--bg` / `--fg`. Dark theme redefines the tokens twice (same values): under `@media (prefers-color-scheme:dark)` on `:root:not([data-theme=light])`, and on `:root[data-theme=dark]`. Phase backgrounds of the timer are the same in both themes.
 - `app.js`: app logic.
 - `fonts/`: embedded fonts (Google Fonts latin subset, OFL) — `figtree.woff2` (text, variable 300–900) and `bebas-neue.woff2` (all digits).
 - `sw.js`: service worker, cache-first for all app files.
@@ -19,14 +19,14 @@ No external dependencies, no build step, no framework.
 - Home screen (shown at launch): title "Timers", a gear button (`#settings-open`) opening the settings, and a "TABATA" tile opening the config. Meant to host other timer types later.
 - Settings screen (`#settings`): global settings, back button (‹) returns to the home screen. Theme: Clair / Sombre / Auto (default, follows the system). Son: switch turning all beeps on / off (on by default).
 - Config screen (`#config`): timer settings, back button (‹) next to Démarrer returns to the home screen. Arrêter (timer) returns to the config; Accueil (end screen) returns to the home screen.
-- Config: prep, work, rest, sets, cycles, rest between cycles. Durations via −/+ (±5 s) or direct input (minutes and seconds fields); sets/cycles via −/+ or input.
+- Config: prep, work, rest, sets, cycles, rest between cycles, cooldown ("Retour au calme", 0 by default; "Récupération" on the timer). Durations via −/+ (±5 s) or direct input (minutes and seconds fields); sets/cycles via −/+ or input.
 - Total session duration shown at the top of the config screen.
-- Keys in `config` / `localStorage` (key `config`), saved with `setConfig(key, value)`: `prep`, `work`, `rest`, `sets`, `cycles`, `cycleRest` — durations **in seconds**.
+- Keys in `config` / `localStorage` (key `config`), saved with `setConfig(key, value)`: `prep`, `work`, `rest`, `sets`, `cycles`, `cycleRest`, `cooldown` — durations **in seconds**.
 - Global settings in `settings` / `localStorage` (key `settings`), saved with `setSetting(key, value)`: `theme` (`light`, `dark`, `auto`). `applyTheme()` sets `data-theme` on `<html>` (no attribute in auto). `sound` (`true` / `false`): `beep()` returns early when off; `applySound()` sets `aria-checked` on `#sound`.
 - Bounds: work ≥ 5 s, other durations ≥ 0, max duration 99:59, sets and cycles 1–99.
-- Session = prep once, then `cycles` × (`sets` × work, with rest between sets), with rest between cycles. A 0 s phase is skipped.
+- Session = prep once, then `cycles` × (`sets` × work, with rest between sets), with rest between cycles, then cooldown once. A 0 s phase is skipped.
 - Timer screen: phase label, progress bar, time in `m:ss` (smaller font from 10:00), total time left, set/cycle dots (text `n / N` above 12; cycles row hidden when 1 cycle), "Ensuite" pill with the next phase (with a mute button `#unmute` on its right, shown while the sound is off, see Design constraints), Arrêter / Pause / skip-to-next.
-- Phase colors (background): prep yellow, work green, rest red, rest between cycles light blue.
+- Phase colors (background): prep yellow, work green, rest red, rest between cycles and cooldown light blue.
 - Version badge (`#version`) always shown at the bottom of the screen: cache name from `sw.js` without `tabata-` (e.g. `v2.1.0`, `v2.1.0b3`).
 
 ## Design constraints

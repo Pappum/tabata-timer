@@ -1,4 +1,4 @@
-const CACHE = 'tabata-v2.3.0b7';
+const CACHE = 'tabata-v2.3.0b8';
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'fonts/figtree.woff2', 'fonts/bebas-neue.woff2', 'manifest.json', 'icon-180.png', 'icon-512.png'];
 
 self.addEventListener('install', e =>

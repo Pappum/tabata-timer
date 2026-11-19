@@ -2,6 +2,7 @@
 
 ## 2.3.0
 - Fix beeps stopping after switching to another app and back ([#15](https://github.com/Pappum/tabata-timer/issues/15)).
+- Optional cooldown phase at the end of the session ([#14](https://github.com/Pappum/tabata-timer/issues/14)).
 
 ## 2.2.0 (2026-11-18)
 - Sound plays even when the iPhone is in silent mode ([#1](https://github.com/Pappum/tabata-timer/issues/1)).

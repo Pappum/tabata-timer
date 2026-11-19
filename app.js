@@ -1,9 +1,9 @@
 const $ = id => document.getElementById(id);
-const MIN = {prep:0, work:5, rest:0, sets:1, cycles:1, cycleRest:0};
-const MAX = {prep:5999, work:5999, rest:5999, sets:99, cycles:99, cycleRest:5999};
-const LABELS = {prep:'Préparation', work:'Effort', rest:'Repos', cycleRest:'Repos cycle'};
+const MIN = {prep:0, work:5, rest:0, sets:1, cycles:1, cycleRest:0, cooldown:0};
+const MAX = {prep:5999, work:5999, rest:5999, sets:99, cycles:99, cycleRest:5999, cooldown:5999};
+const LABELS = {prep:'Préparation', work:'Effort', rest:'Repos', cycleRest:'Repos cycle', cooldown:'Récupération'};
 const MAX_DOTS = 12;
-let config = {prep:10, work:20, rest:10, sets:8, cycles:1, cycleRest:60};
+let config = {prep:10, work:20, rest:10, sets:8, cycles:1, cycleRest:60, cooldown:0};
 try { Object.assign(config, JSON.parse(localStorage.getItem('config') || '{}')); } catch {}
 let settings = {theme:'auto', sound:true};
 try { Object.assign(settings, JSON.parse(localStorage.getItem('settings') || '{}')); } catch {}
@@ -26,6 +26,7 @@ function buildPhases() {
     }
     if (cycle < config.cycles && config.cycleRest > 0) phaseList.push({type:'cycleRest', duration:config.cycleRest, set:config.sets, cycle});
   }
+  if (config.cooldown > 0) phaseList.push({type:'cooldown', duration:config.cooldown, set:config.sets, cycle:config.cycles});
   return phaseList;
 }
 
