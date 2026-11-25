@@ -6,6 +6,7 @@
   --work:#34C77B;--work-fg:#0A3A21;--work-soft:#D6F4E3;--work-val:#0A6B3A;
   --rest:#EF5B5B;--rest-fg:#3D0B0B;--rest-soft:#FCDADA;--rest-val:#A61E1E;
   --cycleRest:#8ECDF5;--cycleRest-fg:#0B2E47;--cycleRest-soft:#DCEFFC;--cycleRest-val:#0B4A75;
+  --cooldown:var(--cycleRest);
   --btn:rgba(255,255,255,.75);--done-bg:var(--ink);--done-fg:var(--paper);
   --bg:var(--paper);--fg:var(--ink);
   color-scheme:light;
@@ -32,7 +33,7 @@ body{font-family:Figtree,system-ui,-apple-system,sans-serif;background:var(--bg)
 body.prep{--bg:var(--prep);--fg:var(--prep-fg)}
 body.work{--bg:var(--work);--fg:var(--work-fg)}
 body.rest{--bg:var(--rest);--fg:var(--rest-fg)}
-body.cycleRest{--bg:var(--cycleRest);--fg:var(--cycleRest-fg)}
+body.cycleRest,body.cooldown{--bg:var(--cycleRest);--fg:var(--cycleRest-fg)}
 body.done{--bg:var(--done-bg);--fg:var(--done-fg)}
 button,input{font:inherit;color:inherit;border:0;background:none;margin:0;padding:0}
 button{cursor:pointer}
@@ -76,7 +77,7 @@ input{user-select:text;-webkit-user-select:text;outline:none}
 .card.prep{background:var(--prep-soft);--val:var(--prep-val)}
 .card.work{background:var(--work-soft);--val:var(--work-val)}
 .card.rest{background:var(--rest-soft);--val:var(--rest-val)}
-.card.cycleRest{background:var(--cycleRest-soft);--val:var(--cycleRest-val)}
+.card.cycleRest,.card.cooldown{background:var(--cycleRest-soft);--val:var(--cycleRest-val)}
 .card.neutral{background:var(--neutral);--val:var(--ink)}
 .l{font-size:15px;font-weight:500}
 .val{display:flex;align-items:baseline;font-family:var(--digits);font-size:64px;font-weight:400;line-height:.9;color:var(--val)}
@@ -117,6 +118,9 @@ input.val{width:100%;text-align:left}
 #time.long{font-size:calc(var(--time-size) * 1.39 / 1.79)}
 .left{display:flex;align-items:center;gap:8px;font-size:26px;font-weight:500}
 .left svg{width:.85em;height:.85em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.next-row{display:flex;justify-content:center;gap:10px;flex:none}
+.unmute{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center}
+.unmute svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
 .next{display:flex;align-items:center;gap:10px;height:52px;padding:0 22px 0 16px;border-radius:999px;background:rgba(255,255,255,.3);flex:none}
 .next i{width:18px;height:18px;border-radius:50%;border:2px solid var(--fg)}
 .next span{font-size:18px;font-weight:500}
