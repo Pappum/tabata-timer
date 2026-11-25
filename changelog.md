@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.0
+## 2.3.0 (2026-11-25)
 - Fix beeps stopping after switching to another app and back ([#15](https://github.com/Pappum/tabata-timer/issues/15)).
 - Optional cooldown phase at the end of the session ([#14](https://github.com/Pappum/tabata-timer/issues/14)).
 
